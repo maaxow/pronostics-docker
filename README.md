@@ -1,6 +1,6 @@
 # Pronostics-docker
 
-A project to build and run the project https://github.com/maaxow/pronotics.git using docker.
+A project to build and run the project https://github.com/maaxow/pronotics using docker.
 
 ## Building
 `docker build -t tomcat-server --build-arg VERSION=1.0.0 .`
