@@ -1,0 +1,39 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    container_name: tomcat-server
+    ports:
+      - "4081:8080"
+    links:
+      - db
+  db:
+    image: hypriot/rpi-mysql
+    container_name: mysql-pi4
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: superpassword
+      MYSQL_USER: maaxow
+      MYSQL_PASSWORD: maaxowpassword
+      MYSQL_DATABASE: pronostics
+      TZ: 'Europe/Paris'
+    ports:
+      - "4006:3306"
+    volumes:
+       - './data/sql/pronostics-structure.sql:/docker-entrypoint-initdb.d/pronostics.sql'
+       - './data/database:/var/lib/mysql'
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: php-my-admin
+    restart: always
+    hostname: database
+    links:
+      - db
+    environment:
+      MYSQL_ROOT_PASSWORD: superpassword
+      PMA_HOST: db
+      TZ: 'Europe/Berlin'
+    ports:
+      - "4082:80"
+  
