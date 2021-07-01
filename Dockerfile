@@ -1,14 +1,18 @@
+# TOMCAT
 FROM tomcat:jdk8-adoptopenjdk-hotspot
-ARG VERSION=1.0.0
-
 MAINTAINER maaxow
-#RUN echo $VERSION
+
+ARG TAG=v1.0.1-beta
+ARG WAR_FILE=pronostics-1.0.1.war
+
+# Install wget
 RUN apt-get -qq update 
 RUN apt-get -qq install -y wget
 
-RUN wget -q -P /tmp/ https://github.com/maaxow/pronostics/releases/download/v$VERSION-beta/pronostics-$VERSION.war
+# Download war file
+RUN wget -q -P ./webapps https://github.com/maaxow/pronostics/releases/download/$TAG/$WAR_FILE
 
-RUN mv /tmp/pronostics-$VERSION.war /usr/local/tomcat/webapps/pronostics.war
-
-EXPOSE 8080
+# Manage properties
+ADD ./data/spring/application.properties /tmp/application.properties
+RUN cat /tmp/application.properties >> ./conf/catalina.properties
 
