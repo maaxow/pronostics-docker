@@ -11,6 +11,7 @@ RUN apt-get -qq install -y wget
 
 # Download war file
 RUN wget -q -P ./webapps https://github.com/maaxow/pronostics/releases/download/$TAG/$WAR_FILE
+RUN mv ./webapps/$WAR_FILE ./webapps/pronostics.war
 
 # Manage properties
 ADD ./data/spring/application.properties /tmp/application.properties
