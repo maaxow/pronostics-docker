@@ -2,8 +2,8 @@
 FROM tomcat:jdk8-adoptopenjdk-hotspot
 MAINTAINER maaxow
 
-ARG TAG=v1.0.1-beta
-ARG WAR_FILE=pronostics-1.0.1.war
+ARG TAG=v1.0.3-beta
+ARG WAR_FILE=pronostics-1.0.3.war
 
 # Install wget
 RUN apt-get -qq update 
@@ -15,5 +15,5 @@ RUN mv ./webapps/$WAR_FILE ./webapps/pronostics.war
 
 # Manage properties
 ADD ./data/spring/application.properties /tmp/application.properties
-RUN cat /tmp/application.properties >> ./conf/catalina.properties
+RUN mv /tmp/application.properties ./webapps/pronostics/WEB-INF/classes/spring/application.properties
 
