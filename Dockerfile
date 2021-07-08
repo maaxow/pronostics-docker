@@ -14,6 +14,6 @@ RUN wget -q -P ./webapps https://github.com/maaxow/pronostics/releases/download/
 RUN mv ./webapps/$WAR_FILE ./webapps/pronostics.war
 
 # Manage properties
-ADD ./data/spring/application.properties /tmp/application.properties
-RUN mv /tmp/application.properties ./webapps/pronostics/WEB-INF/classes/spring/application.properties
-
+RUN mkdir -p /etc/pronostics/config
+ADD ./data/spring/application.properties /etc/pronostics/config/application.properties
+#RUN export spring_config_location=/etc/pronostics/config/application.properties
