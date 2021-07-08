@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5deb2
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 192.168.1.38:3306
--- Généré le : mar. 29 juin 2021 à 16:47
--- Version du serveur :  5.7.34
--- Version de PHP : 7.4.3
+-- Hôte : db
+-- Généré le : jeu. 08 juil. 2021 à 09:31
+-- Version du serveur : 5.5.60-0+deb7u1
+-- Version de PHP : 7.4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -21,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `pronostics`
 --
+CREATE DATABASE IF NOT EXISTS `pronostics` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `pronostics`;
 
 -- --------------------------------------------------------
 
@@ -28,15 +29,19 @@ SET time_zone = "+00:00";
 -- Structure de la table `game`
 --
 
-CREATE TABLE `game` (
-  `game_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `game`;
+CREATE TABLE IF NOT EXISTS `game` (
+  `game_id` int(11) NOT NULL AUTO_INCREMENT,
   `game_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `tv` varchar(255) DEFAULT NULL,
   `game_stadium` varchar(255) DEFAULT NULL,
   `team_id_1` int(11) DEFAULT NULL,
   `team_id_2` int(11) DEFAULT NULL,
   `goal_team_1` int(11) DEFAULT NULL,
-  `goal_team_2` int(11) DEFAULT NULL
+  `goal_team_2` int(11) DEFAULT NULL,
+  PRIMARY KEY (`game_id`),
+  KEY `fk_game_team_1` (`team_id_1`),
+  KEY `fk_game_team_2` (`team_id_2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -45,12 +50,16 @@ CREATE TABLE `game` (
 -- Structure de la table `pronostic`
 --
 
-CREATE TABLE `pronostic` (
-  `pronostic_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `pronostic`;
+CREATE TABLE IF NOT EXISTS `pronostic` (
+  `pronostic_id` int(11) NOT NULL AUTO_INCREMENT,
   `game_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `goal_team_1` int(11) DEFAULT NULL,
-  `goal_team_2` int(11) DEFAULT NULL
+  `goal_team_2` int(11) DEFAULT NULL,
+  PRIMARY KEY (`pronostic_id`),
+  KEY `fk_prono_game` (`game_id`),
+  KEY `fk_prono_user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -59,8 +68,9 @@ CREATE TABLE `pronostic` (
 -- Structure de la table `team`
 --
 
-CREATE TABLE `team` (
-  `team_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `team`;
+CREATE TABLE IF NOT EXISTS `team` (
+  `team_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `groupe` varchar(255) NOT NULL,
   `nb_game` int(11) DEFAULT NULL,
@@ -69,7 +79,8 @@ CREATE TABLE `team` (
   `nb_lose` int(11) DEFAULT NULL,
   `goal_scored` int(11) DEFAULT NULL,
   `goal_taken` int(11) DEFAULT NULL,
-  `point` int(11) DEFAULT NULL
+  `point` int(11) DEFAULT NULL,
+  PRIMARY KEY (`team_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -78,73 +89,15 @@ CREATE TABLE `team` (
 -- Structure de la table `users`
 --
 
-CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `firstname` varchar(255) DEFAULT NULL,
-  `lastname` varchar(255) DEFAULT NULL
+  `lastname` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `game`
---
-ALTER TABLE `game`
-  ADD PRIMARY KEY (`game_id`),
-  ADD KEY `fk_game_team_1` (`team_id_1`),
-  ADD KEY `fk_game_team_2` (`team_id_2`);
-
---
--- Index pour la table `pronostic`
---
-ALTER TABLE `pronostic`
-  ADD PRIMARY KEY (`pronostic_id`),
-  ADD KEY `fk_prono_game` (`game_id`),
-  ADD KEY `fk_prono_user` (`user_id`);
-
---
--- Index pour la table `team`
---
-ALTER TABLE `team`
-  ADD PRIMARY KEY (`team_id`);
-
---
--- Index pour la table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `game`
---
-ALTER TABLE `game`
-  MODIFY `game_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `pronostic`
---
-ALTER TABLE `pronostic`
-  MODIFY `pronostic_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `team`
---
-ALTER TABLE `team`
-  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées
