@@ -36,4 +36,3 @@ services:
       TZ: 'Europe/Berlin'
     ports:
       - "4082:80"
-  
